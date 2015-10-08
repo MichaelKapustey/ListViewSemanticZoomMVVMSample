@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="ListViewSemanticZoomMVVMSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ListViewSemanticZoomMVVMSample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+   
+    <Page.DataContext>
+        <local:MainPageViewModel/>
+    </Page.DataContext>
+    <Page.Resources>
+        <CollectionViewSource x:Key="cvs"
+                              IsSourceGrouped="True"
+                              Source="{Binding Data}"/>
+    </Page.Resources>
+    <Grid>
+        <SemanticZoom x:Name="semanticZoom"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch">
+            <SemanticZoom.ZoomedOutView>
+
+                <GridView ItemsSource="{Binding Source={StaticResource cvs}, Path=CollectionGroups}">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Group.Key}"
+                                       FontFamily="Segoe UI Light"
+                                       FontSize="24"/> 
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid ItemWidth="75"
+                                      ItemHeight="75" 
+                                      Orientation="Horizontal"
+                                      MaximumRowsOrColumns="4"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      VerticalChildrenAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="4" />
+                            <Setter Property="Padding" Value="10" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </GridView>
+            </SemanticZoom.ZoomedOutView>
+            <SemanticZoom.ZoomedInView>
+                <ListView ItemsSource="{Binding Source={StaticResource cvs}}" 
+                          IsSwipeEnabled="True" 
+                          ScrollViewer.IsHorizontalScrollChainingEnabled="False">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10,10,0,0" 
+                                        HorizontalAlignment="Left" 
+                                        >
+                                <Image Source="{Binding Image}" 
+                                       Height="60" 
+                                       Width="60"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                                <TextBlock TextWrapping="Wrap"
+                                           Width="200" 
+                                           VerticalAlignment="Center"
+                                           Text="{Binding Title}" 
+                                           HorizontalAlignment="Left"
+                                           FontFamily="Segoe UI" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text='{Binding Key}' 
+                                               Margin="5"
+                                               FontSize="18"
+                                               FontFamily="Segoe UI Light" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid Orientation="Vertical" MaximumRowsOrColumns="3" />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
+            </SemanticZoom.ZoomedInView>
+        </SemanticZoom>
+    </Grid>
+</Page>
